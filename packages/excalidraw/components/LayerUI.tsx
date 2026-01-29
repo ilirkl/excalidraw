@@ -62,6 +62,8 @@ import { ImageExportDialog } from "./ImageExportDialog";
 import { Island } from "./Island";
 import { JSONExportDialog } from "./JSONExportDialog";
 import { LaserPointerButton } from "./LaserPointerButton";
+import { NanoBananaPromptBar } from "./NanoBananaPromptBar";
+import { NanoBananaReviewBar } from "./NanoBananaReviewBar";
 
 import "./LayerUI.scss";
 import "./Toolbar.scss";
@@ -167,21 +169,21 @@ const LayerUI = ({
 
   const spacing = isCompactStylesPanel
     ? {
-        menuTopGap: 4,
-        toolbarColGap: 4,
-        toolbarRowGap: 1,
-        toolbarInnerRowGap: 0.5,
-        islandPadding: 1,
-        collabMarginLeft: 8,
-      }
+      menuTopGap: 4,
+      toolbarColGap: 4,
+      toolbarRowGap: 1,
+      toolbarInnerRowGap: 0.5,
+      islandPadding: 1,
+      collabMarginLeft: 8,
+    }
     : {
-        menuTopGap: 6,
-        toolbarColGap: 4,
-        toolbarRowGap: 1,
-        toolbarInnerRowGap: 1,
-        islandPadding: 1,
-        collabMarginLeft: 8,
-      };
+      menuTopGap: 6,
+      toolbarColGap: 4,
+      toolbarRowGap: 1,
+      toolbarInnerRowGap: 1,
+      islandPadding: 1,
+      collabMarginLeft: 8,
+    };
 
   const TunnelsJotaiProvider = tunnels.tunnelsJotai.Provider;
 
@@ -449,8 +451,7 @@ const LayerUI = ({
           trackEvent(
             "sidebar",
             `toggleDock (${docked ? "dock" : "undock"})`,
-            `(${
-              editorInterface.formFactor === "phone" ? "mobile" : "desktop"
+            `(${editorInterface.formFactor === "phone" ? "mobile" : "desktop"
             })`,
           );
         }}
@@ -479,8 +480,7 @@ const LayerUI = ({
             trackEvent(
               "sidebar",
               `${DEFAULT_SIDEBAR.name} (open)`,
-              `button (${
-                editorInterface.formFactor === "phone" ? "mobile" : "desktop"
+              `button (${editorInterface.formFactor === "phone" ? "mobile" : "desktop"
               })`,
             );
           }
@@ -519,8 +519,8 @@ const LayerUI = ({
                       ? "strokeColor"
                       : "backgroundColor"
                     : colorPickerType === "elementBackground"
-                    ? "backgroundColor"
-                    : "strokeColor"]: color,
+                      ? "backgroundColor"
+                      : "strokeColor"]: color,
                 });
                 ShapeCache.delete(element);
               }
@@ -600,8 +600,8 @@ const LayerUI = ({
             className="layer-ui__wrapper"
             style={
               appState.openSidebar &&
-              isSidebarDocked &&
-              editorInterface.canFitSidebar
+                isSidebarDocked &&
+                editorInterface.canFitSidebar
                 ? { width: `calc(100% - var(--right-sidebar-width))` }
                 : {}
             }
@@ -614,6 +614,9 @@ const LayerUI = ({
               showExitZenModeBtn={showExitZenModeBtn}
               renderWelcomeScreen={renderWelcomeScreen}
             />
+            {/* Nano Banana Inpainting Bars */}
+            <NanoBananaPromptBar />
+            <NanoBananaReviewBar />
             {appState.scrolledOutside && (
               <button
                 type="button"

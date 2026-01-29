@@ -1,0 +1,107 @@
+/* NanoBanana Prompt Bar - Minimal custom styles, leveraging Excalidraw's design system */
+
+.nanobanana-prompt-bar {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  pointer-events: auto;
+}
+
+/* Mode toggle group - wraps radio buttons with labels */
+.nanobanana-mode-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--color-surface-mid);
+  border-radius: var(--border-radius-lg);
+  padding: 2px;
+}
+
+.nanobanana-mode-group .ToolIcon_type_radio {
+  display: none;
+  /* Hide actual radio, show label */
+}
+
+.nanobanana-mode-label {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-on-surface);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+}
+
+.nanobanana-mode-label:hover {
+  background: var(--color-surface-high);
+}
+
+.nanobanana-mode-label.active {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* Prompt input */
+.nanobanana-prompt-input {
+  flex: 1;
+  min-width: 240px;
+  max-width: 400px;
+}
+
+/* Settings popover - using Excalidraw's picker styling */
+.nanobanana-settings-popover {
+  padding: 12px;
+  background: var(--popup-bg-color);
+  box-shadow: var(--shadow-island);
+  border-radius: 4px;
+  z-index: var(--zIndex-ui-styles-popup);
+  min-width: 200px;
+}
+
+.nanobanana-setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.nanobanana-setting-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-on-surface);
+}
+
+.nanobanana-image-count {
+  min-width: 24px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Dropdown select styling to match Excalidraw */
+.nanobanana-settings-popover select {
+  appearance: none;
+  background: var(--color-surface-low);
+  border: 1px solid var(--color-border-outline-variant);
+  border-radius: var(--border-radius-md);
+  padding: 6px 28px 6px 10px;
+  font-size: 13px;
+  color: var(--color-on-surface);
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236c757d' d='M3 4.5L6 8l3-3.5H3z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+.nanobanana-settings-popover select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* Popover arrow */
+.popover-arrow {
+  fill: var(--popup-bg-color);
+}

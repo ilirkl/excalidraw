@@ -1,0 +1,35 @@
+/* NanoBanana Review Bar - Minimal custom styles, leveraging Excalidraw's design system */
+
+.nanobanana-review-bar {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    pointer-events: auto;
+}
+
+/* Thumbnail styling */
+.nanobanana-thumbnail-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--color-on-surface);
+    padding: 4px 8px;
+}
+
+.nanobanana-thumbnail-img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: var(--border-radius-md);
+}
+
+/* Review actions spacer */
+.nanobanana-review-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 16px;
+    padding-left: 16px;
+    border-left: 1px solid var(--color-border-outline-variant);
+}

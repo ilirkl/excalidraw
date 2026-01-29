@@ -215,14 +215,14 @@ ClearCanvas.displayName = "ClearCanvas";
 export const ToggleTheme = (
   props:
     | {
-        allowSystemTheme: true;
-        theme: Theme | "system";
-        onSelect: (theme: Theme | "system") => void;
-      }
+      allowSystemTheme: true;
+      theme: Theme | "system";
+      onSelect: (theme: Theme | "system") => void;
+    }
     | {
-        allowSystemTheme?: false;
-        onSelect?: (theme: Theme) => void;
-      },
+      allowSystemTheme?: false;
+      onSelect?: (theme: Theme) => void;
+    },
 ) => {
   const { t } = useI18n();
   const appState = useUIAppState();
@@ -393,3 +393,23 @@ export const LiveCollaborationTrigger = ({
 };
 
 LiveCollaborationTrigger.displayName = "LiveCollaborationTrigger";
+
+export const NanoBananaSettings = () => {
+  const { t } = useI18n();
+  const setAppState = useExcalidrawSetAppState();
+
+  return (
+    <DropdownMenuItem
+      icon={boltIcon}
+      data-testid="nanobanana-settings-button"
+      onSelect={() => {
+        setAppState({ openDialog: { name: "settings" } });
+      }}
+      aria-label="Nano Banana Settings"
+    >
+      Nano Banana Settings
+    </DropdownMenuItem>
+  );
+};
+NanoBananaSettings.displayName = "NanoBananaSettings";
+

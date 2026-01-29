@@ -3,6 +3,7 @@ import {
   DEFAULT_EXPORT_PADDING,
   EXPORT_SCALES,
   THEME,
+  viewportCoordsToSceneCoords,
 } from "@excalidraw/common";
 
 import { getNonDeletedElements } from "@excalidraw/element";
@@ -168,11 +169,11 @@ export const actionSaveToActiveFile = register({
     try {
       const { fileHandle } = isImageFileHandle(appState.fileHandle)
         ? await resaveAsImageWithScene(
-            elements,
-            appState,
-            app.files,
-            app.getName(),
-          )
+          elements,
+          appState,
+          app.files,
+          app.getName(),
+        )
         : await saveAsJSON(elements, appState, app.files, app.getName());
 
       return {
@@ -182,13 +183,13 @@ export const actionSaveToActiveFile = register({
           fileHandle,
           toast: fileHandleExists
             ? {
-                message: fileHandle?.name
-                  ? t("toast.fileSavedToFilename").replace(
-                      "{filename}",
-                      `"${fileHandle.name}"`,
-                    )
-                  : t("toast.fileSaved"),
-              }
+              message: fileHandle?.name
+                ? t("toast.fileSavedToFilename").replace(
+                  "{filename}",
+                  `"${fileHandle.name}"`,
+                )
+                : t("toast.fileSaved"),
+            }
             : null,
         },
       };
@@ -267,15 +268,25 @@ export const actionLoadScene = register({
   },
   perform: async (elements, appState, _, app) => {
     try {
-      const {
-        elements: loadedElements,
-        appState: loadedAppState,
-        files,
-      } = await loadFromJSON(appState, elements);
+      const result = await loadFromJSON(appState, elements);
+      if ("rawFiles" in result) {
+        // Assume these are images or other supported files for insertion.
+        // We'll insert them at the center of the viewport (or we could use
+        // the mouse position if available, but for a global action,
+        // center make sense).
+        const clientX = appState.width / 2 + appState.offsetLeft;
+        const clientY = appState.height / 2 + appState.offsetTop;
+        const { x, y } = viewportCoordsToSceneCoords(
+          { clientX, clientY },
+          appState,
+        );
+        app.insertImages(result.rawFiles, x, y);
+        return false;
+      }
       return {
-        elements: loadedElements,
-        appState: loadedAppState,
-        files,
+        elements: result.elements,
+        appState: result.appState,
+        files: result.files,
         captureUpdate: CaptureUpdateAction.IMMEDIATELY,
       };
     } catch (error: any) {

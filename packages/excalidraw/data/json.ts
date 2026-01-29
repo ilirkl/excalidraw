@@ -2,6 +2,7 @@ import {
   DEFAULT_FILENAME,
   EXPORT_DATA_TYPES,
   getExportSource,
+  IMAGE_MIME_TYPES,
   MIME_TYPES,
   VERSIONS,
 } from "@excalidraw/common";
@@ -10,7 +11,7 @@ import type { ExcalidrawElement } from "@excalidraw/element/types";
 
 import { cleanAppStateForExport, clearAppStateForDatabase } from "../appState";
 
-import { isImageFileHandle, loadFromBlob } from "./blob";
+import { isImageFileHandle, loadFromBlob, isSupportedImageFile } from "./blob";
 import { fileOpen, fileSave } from "./filesystem";
 
 import type { AppState, BinaryFiles, LibraryItems } from "../types";
@@ -61,7 +62,7 @@ export const serializeAsJSON = (
       type === "local"
         ? filterOutDeletedFiles(elements, files)
         : // will be stripped from JSON
-          undefined,
+        undefined,
   };
 
   return JSON.stringify(data, null, 2);
@@ -93,14 +94,38 @@ export const saveAsJSON = async (
 export const loadFromJSON = async (
   localAppState: AppState,
   localElements: readonly ExcalidrawElement[] | null,
-) => {
-  const file = await fileOpen({
+): Promise<ImportedDataState | { rawFiles: File[] }> => {
+  const fileOrFiles = await fileOpen({
     description: "Excalidraw files",
     // ToDo: Be over-permissive until https://bugs.webkit.org/show_bug.cgi?id=34442
     // gets resolved. Else, iOS users cannot open `.excalidraw` files.
-    // extensions: ["json", "excalidraw", "png", "svg"],
+    extensions: [
+      "json",
+      "excalidraw",
+      "excalidrawlib",
+      ...(Object.keys(IMAGE_MIME_TYPES) as (keyof typeof IMAGE_MIME_TYPES)[]),
+    ],
+    multiple: true,
   });
-  return loadFromBlob(file, localAppState, localElements, file.handle);
+
+  const files = Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles];
+
+  // If singular file, try to load as scene/library
+  if (files.length === 1) {
+    const file = files[0];
+    try {
+      return await loadFromBlob(file, localAppState, localElements, file.handle);
+    } catch (error) {
+      if (isSupportedImageFile(file)) {
+        return { rawFiles: files };
+      }
+      throw error;
+    }
+  }
+
+  // If multiple files, assume they are images to be inserted
+  // (We don't support opening multiple scene files at once yet)
+  return { rawFiles: files };
 };
 
 export const isValidExcalidrawData = (data?: {
