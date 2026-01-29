@@ -1915,7 +1915,7 @@ class App extends React.Component<AppProps, AppState> {
         this.scene.mutateElement(el, { opacity: originalOpacities.get(el.id) });
       });
 
-      const base64Image = baseImageCanvasResult.canvas.toDataURL("image/png").split(",")[1];
+      const base64Image = baseImageCanvasResult.toDataURL("image/png").split(",")[1];
 
       // 2. Export Mask Image (Black bg, White strokes)
       const maskClones = maskElements.map(el => ({
@@ -1936,7 +1936,7 @@ class App extends React.Component<AppProps, AppState> {
           exportingFrame: null,
         }
       );
-      const base64Mask = maskImageCanvasResult.canvas.toDataURL("image/png").split(",")[1];
+      const base64Mask = maskImageCanvasResult.toDataURL("image/png").split(",")[1];
 
       // 3. Call API
       const result = await generateInpaintedImages({
